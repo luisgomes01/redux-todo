@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import './App.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { add } from './features/todos/todosSlice'
 import { TodoList } from './features/todos/components/TodoList'
 import { TodoInput } from './features/todos/components/TodoInput'
+import './App.css'
 
 const App = () => {
   const [todoText, setTodoText] = useState("")
@@ -21,6 +21,7 @@ const App = () => {
     dispatch(add(todoText))
     setTodoText('')
   }
+
 
   return (
     <main>
