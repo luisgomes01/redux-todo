@@ -14,11 +14,18 @@ export const todosSlice = createSlice({
             }
 
             state.push(newTodo)
+        },
+        toggleTodoStatus: (state, action) => {
+            const todo = state.find((todo) => todo.id === action.payload)
+
+            if (todo) {
+                todo.completed = !todo.completed
+            }
         }
     }
 })
 
-export const { add } = todosSlice.actions
+export const { add, completeTodo } = todosSlice.actions
 
 
 export default todosSlice.reducer
