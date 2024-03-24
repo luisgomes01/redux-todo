@@ -1,5 +1,5 @@
 import React from 'react'
-import { toggleTodoStatus } from '../todosSlice'
+import { toggleTodoStatus, deleteTodo } from '../todosSlice'
 import { useDispatch } from 'react-redux';
 
 export const TodoItem = ({ todo, completed }) => {
@@ -16,7 +16,7 @@ export const TodoItem = ({ todo, completed }) => {
             <p className='pl-3'>{completed ? completedText(todo.text) : todo.text}</p>
             <div className='flex items-center justify-center gap-2'>
                 {todo.completed ? <PendingButton /> : <CompleteButton />}
-                <button className='p-2 rounded h-full'>Delete</button>
+                <button className='p-2 rounded h-full' onClick={() => dispatch(deleteTodo(todo.id))}>Delete</button>
                 {!todo.completed && (
                     <button className='p-2 rounded h-full'>Edit</button>
                 )}
