@@ -7,13 +7,19 @@ export const TodoItem = ({ todo, completed }) => {
 
     const completedText = (todoText) => <s>{todoText}</s>
 
+    const CompleteButton = () => <button className='p-2 rounded h-full' onClick={() => dispatch(toggleTodoStatus(todo.id))}>Complete</button>
+
+    const PendingButton = () => <button className='p-2 rounded h-full' onClick={() => dispatch(toggleTodoStatus(todo.id))}>Back to Pending</button>
+
     return (
         <div className={`${completed ? 'opacity-80' : ''} w-full px-2 py-3 bg-gray-200 rounded flex justify-between items-center`}>
             <p className='pl-3'>{completed ? completedText(todo.text) : todo.text}</p>
             <div className='flex items-center justify-center gap-2'>
-                <button className='p-2 rounded h-full font' onClick={() => dispatch(toggleTodoStatus(todo.id))}>Complete</button>
+                {todo.completed ? <PendingButton /> : <CompleteButton />}
                 <button className='p-2 rounded h-full'>Delete</button>
-                <button className='p-2 rounded h-full'>Edit</button>
+                {!todo.completed && (
+                    <button className='p-2 rounded h-full'>Edit</button>
+                )}
             </div>
         </div>
     )
