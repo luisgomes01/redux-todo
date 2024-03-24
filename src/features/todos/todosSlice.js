@@ -20,12 +20,13 @@ export const todosSlice = createSlice({
 
             if (todo) {
                 todo.completed = !todo.completed
+                state.filter((todo) => todo.id === action.payload)
             }
         }
     }
 })
 
-export const { add, completeTodo } = todosSlice.actions
+export const { add, toggleTodoStatus } = todosSlice.actions
 
 
 export default todosSlice.reducer

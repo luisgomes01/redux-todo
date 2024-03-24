@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { add } from './features/todos/todosSlice'
-import { TodoList } from './features/todos/components/TodoList'
+import { TodoPendingList, TodoCompletedList } from './features/todos/components/todo-list'
 import { TodoInput } from './features/todos/components/TodoInput'
 import './App.css'
 
@@ -24,9 +24,12 @@ const App = () => {
 
 
   return (
-    <main>
+    <main className='min-h-screen mt-8'>
       <TodoInput handleSubmit={handleSubmit} handleChange={handleChange} todoText={todoText} />
-      <TodoList todos={todos} />
+      <div className='w-full max-w-full flex gap-4'>
+        <TodoPendingList todos={todos} />
+        <TodoCompletedList todos={todos} />
+      </div>
     </main>
   )
 }
