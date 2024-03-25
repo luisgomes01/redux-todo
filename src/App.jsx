@@ -15,9 +15,9 @@ const App = () => {
   }
 
   const handleSubmit = (e) => {
+    e.preventDefault()
     if (!todoText) return
 
-    e.preventDefault()
     dispatch(add(todoText))
     setTodoText('')
   }
