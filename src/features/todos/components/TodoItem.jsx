@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { toggleTodoStatus, deleteTodo, editTodo } from '../todosSlice'
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
 
 export const TodoItem = ({ todo, completed }) => {
     const [editable, setEditable] = useState(false)
@@ -19,6 +18,14 @@ export const TodoItem = ({ todo, completed }) => {
         setEditable((prev) => !prev)
     }
 
+    const inputRef = useRef()
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus()
+        }
+    }, [editable])
+
     const EditTodo = () => {
         const [todoText, setTodoText] = useState(todo.text)
 
@@ -30,7 +37,7 @@ export const TodoItem = ({ todo, completed }) => {
 
         return (
             <form onSubmit={(e) => handleEdit(e)}>
-                <input className='pl-3' value={todoText} onChange={(e) => setTodoText(e.target.value)} />
+                <input className='pl-3' value={todoText} onChange={(e) => setTodoText(e.target.value)} ref={inputRef} />
                 <input type='submit' className='opacity-0' />
             </form>
         )
