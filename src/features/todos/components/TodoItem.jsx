@@ -64,7 +64,7 @@ export const TodoItem = ({ todo, completed }) => {
         }
 
         return (
-            <form onSubmit={(e) => handleEdit(e)}>
+            <form className='flex' onSubmit={(e) => handleEdit(e)}>
                 <input className='pl-3' value={todoText} onChange={(e) => setTodoText(e.target.value)} ref={inputRef} />
                 <input type='submit' className='opacity-0' />
             </form>
