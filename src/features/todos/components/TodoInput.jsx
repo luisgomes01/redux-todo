@@ -2,7 +2,7 @@ import React from 'react'
 
 export const TodoInput = ({ handleSubmit, handleChange, todoText }) => (
     <div className="flex items-center justify-center">
-        <form className='w-2/4 flex flex-col self-center' onSubmit={handleSubmit}>
+        <form className='w-11/12 md:w-2/4 flex flex-col self-center' onSubmit={handleSubmit}>
             <div className='flex items-center relative'>
                 <input className='block m-0 p-3 rounded w-full' type='text' placeholder='Todo' value={todoText} onChange={handleChange} />
                 <button
