@@ -5,6 +5,7 @@ import { TodoInput } from './features/todos/components/TodoInput'
 import './App.css'
 import { TodoMobileList } from './features/todos/components/todo-list/TodoMobileList'
 import { TodoList } from './features/todos/components/todo-list/TodoList'
+import { isMobile } from './features/todos/constants'
 
 const App = () => {
   const [todoText, setTodoText] = useState("")
@@ -23,7 +24,6 @@ const App = () => {
     setTodoText('')
   }
 
-  const isMobile = window.screen.width < 768
 
   return (
     <main className='min-h-screen mt-8'>
