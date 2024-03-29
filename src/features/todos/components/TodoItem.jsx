@@ -8,6 +8,7 @@ import { useImperativeHandle } from 'react';
 export const TodoItem = ({ todo, completed }) => {
     const [editable, setEditable] = useState(false)
     const dispatch = useDispatch();
+    const ref = useRef(null)
 
     const completedText = (todoText) => <s>{todoText}</s>
 
@@ -20,7 +21,7 @@ export const TodoItem = ({ todo, completed }) => {
     )
 
     const FinishEditingButton = () => (
-        <button className="p-2 rounded h-full flex text-green-500">
+        <button className="p-2 rounded h-full flex text-green-500" onClick={(e) => ref.current.handleEdit(e)}>
             <span className="material-symbols-outlined" title='Finish editing'>
                 done
             </span>
@@ -56,9 +57,6 @@ export const TodoItem = ({ todo, completed }) => {
     const toggleEdit = () => {
         setEditable((prev) => !prev)
     }
-
-    const ref = useRef(null)
-
 
     const EditTodo = forwardRef((props, ref) => {
         const [todoText, setTodoText] = useState(todo.text)
