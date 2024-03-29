@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { toggleTodoStatus, deleteTodo, editTodo } from '../todosSlice'
 import { useDispatch } from 'react-redux';
+import { isMobile } from '../constants';
+import { forwardRef } from 'react';
+import { useImperativeHandle } from 'react';
 
 export const TodoItem = ({ todo, completed }) => {
     const [editable, setEditable] = useState(false)
@@ -16,6 +19,14 @@ export const TodoItem = ({ todo, completed }) => {
         </button>
     )
 
+    const FinishEditingButton = () => (
+        <button className="p-2 rounded h-full flex text-green-500">
+            <span className="material-symbols-outlined" title='Finish editing'>
+                done
+            </span>
+        </button >
+    )
+
     const PendingButton = () => (
         <button className='p-2 rounded h-full flex hover:text-yellow-500' onClick={() => dispatch(toggleTodoStatus(todo.id))}>
             <span className="material-symbols-outlined rotate-180" title='Move Back to Pending'>
@@ -25,37 +36,53 @@ export const TodoItem = ({ todo, completed }) => {
     )
 
     const RemoveButton = () => (
-        <button className='p-2 rounded h-full flex hover:text-red-500' onClick={() => dispatch(deleteTodo(todo.id))}>
-            <span class="material-symbols-outlined" title='Delete todo'>
+        <button {...(editable && { disabled: true })} className={`p-2 rounded h-full flex hover:text-red-500 ${editable && 'opacity-80 cursor-not-allowed'}`} onClick={() => dispatch(deleteTodo(todo.id))}>
+            <span className="material-symbols-outlined" title='Delete todo'>
                 remove
             </span>
-        </button>
+        </button >
     )
 
     const EditButton = () => (
-        <button className='p-2 rounded h-full flex hover:text-blue-500' onClick={toggleEdit}>
-            <span class="material-symbols-outlined" title='Edit todo'>
+        <button {...(editable && { disabled: true })} className={` p-2 rounded h-full flex hover:text-blue-500 ${editable && 'opacity-80 cursor-not-allowed'}`} onClick={toggleEdit}>
+            <span className="material-symbols-outlined" title='Edit todo'>
                 edit
             </span>
         </button>
     )
 
-    const TodoText = () => <p className='pl-3'>{completed ? completedText(todo.text) : todo.text}</p>
+    const TodoText = () => <p>{completed ? completedText(todo.text) : todo.text}</p>
 
     const toggleEdit = () => {
         setEditable((prev) => !prev)
     }
 
-    const inputRef = useRef()
+    const ref = useRef(null)
 
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus()
-        }
-    }, [editable])
 
-    const EditTodo = () => {
+    const EditTodo = forwardRef((props, ref) => {
         const [todoText, setTodoText] = useState(todo.text)
+        const inputRef = useRef(null)
+        const enterKeyCode = 13
+
+        const eventListenerFn = (e) => {
+            if (e.keyCode === enterKeyCode) {
+                ref.current.handleEdit(e)
+            }
+        }
+
+        useEffect(() => {
+            const inputElement = inputRef.current
+            if (inputElement) {
+                inputElement.focus()
+                inputElement.addEventListener('keydown', eventListenerFn)
+            }
+            return () => {
+                if (inputElement) {
+                    inputElement.removeEventListener('keydown', eventListenerFn)
+                }
+            }
+        }, [editable])
 
         const handleEdit = (e) => {
             e.preventDefault()
@@ -63,28 +90,40 @@ export const TodoItem = ({ todo, completed }) => {
             toggleEdit()
         }
 
+        useImperativeHandle(ref, () => {
+            return {
+                handleEdit
+            }
+        })
+
         return (
-            <form className='flex' onSubmit={(e) => handleEdit(e)}>
-                <input className='pl-3' value={todoText} onChange={(e) => setTodoText(e.target.value)} ref={inputRef} />
-                <input type='submit' className='opacity-0' />
-            </form>
+            <div className='flex w-full'>
+                {isMobile ?
+                    <textarea className='w-full' value={todoText} onChange={(e) => setTodoText(e.target.value)} ref={inputRef} />
+                    :
+                    <input className='w-full' value={todoText} onChange={(e) => setTodoText(e.target.value)} ref={inputRef} />
+                }
+            </div>
         )
-    }
+    })
 
     return (
-        <div className={`${completed ? 'opacity-80' : ''} w-full px-2 bg-gray-200 rounded flex justify-between items-center`}>
-            {editable ? <EditTodo /> : <TodoText />}
-            <div className='flex items-center justify-center gap-2'>
-                {!editable && (
-                    <>
-                        {todo.completed ? <PendingButton /> : <CompleteButton />}
-                    </>
-                )}
+        <div className={`${completed ? 'opacity-80' : ''} w-full px-2 pb-2 bg-gray-200 rounded flex flex-col justify-between items-center`}>
+            <header className='flex items-center justify-end gap-2 w-full'>
+                {todo.completed
+                    ?
+                    <PendingButton />
+                    :
+                    (editable ? (<FinishEditingButton />) : <CompleteButton />)
+                }
                 <RemoveButton />
                 {!todo.completed && (
                     <EditButton />
                 )}
-            </div>
+            </header>
+            <hr className='w-[calc(100%+1rem)]  border-solid border-gray-300 mb-2' />
+            {editable ? <EditTodo ref={ref} /> : <TodoText />}
+
         </div >
     )
 }
