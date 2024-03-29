@@ -8,9 +8,37 @@ export const TodoItem = ({ todo, completed }) => {
 
     const completedText = (todoText) => <s>{todoText}</s>
 
-    const CompleteButton = () => <button className='p-2 rounded h-full' onClick={() => dispatch(toggleTodoStatus(todo.id))}>Complete</button>
+    const CompleteButton = () => (
+        <button className='p-2 rounded h-full flex hover:text-green-500' onClick={() => dispatch(toggleTodoStatus(todo.id))}>
+            <span className="material-symbols-outlined" title='Complete Todo'>
+                done
+            </span>
+        </button>
+    )
 
-    const PendingButton = () => <button className='p-2 rounded h-full' onClick={() => dispatch(toggleTodoStatus(todo.id))}>Back to Pending</button>
+    const PendingButton = () => (
+        <button className='p-2 rounded h-full flex hover:text-yellow-500' onClick={() => dispatch(toggleTodoStatus(todo.id))}>
+            <span className="material-symbols-outlined rotate-180" title='Move Back to Pending'>
+                trending_flat
+            </span>
+        </button>
+    )
+
+    const RemoveButton = () => (
+        <button className='p-2 rounded h-full flex hover:text-red-500' onClick={() => dispatch(deleteTodo(todo.id))}>
+            <span class="material-symbols-outlined" title='Delete todo'>
+                remove
+            </span>
+        </button>
+    )
+
+    const EditButton = () => (
+        <button className='p-2 rounded h-full flex hover:text-blue-500' onClick={toggleEdit}>
+            <span class="material-symbols-outlined" title='Edit todo'>
+                edit
+            </span>
+        </button>
+    )
 
     const TodoText = () => <p className='pl-3'>{completed ? completedText(todo.text) : todo.text}</p>
 
@@ -44,15 +72,19 @@ export const TodoItem = ({ todo, completed }) => {
     }
 
     return (
-        <div className={`${completed ? 'opacity-80' : ''} w-full px-2 py-3 bg-gray-200 rounded flex justify-between items-center`}>
+        <div className={`${completed ? 'opacity-80' : ''} w-full px-2 bg-gray-200 rounded flex justify-between items-center`}>
             {editable ? <EditTodo /> : <TodoText />}
             <div className='flex items-center justify-center gap-2'>
-                {todo.completed ? <PendingButton /> : <CompleteButton />}
-                <button className='p-2 rounded h-full' onClick={() => dispatch(deleteTodo(todo.id))}>Delete</button>
+                {!editable && (
+                    <>
+                        {todo.completed ? <PendingButton /> : <CompleteButton />}
+                    </>
+                )}
+                <RemoveButton />
                 {!todo.completed && (
-                    <button className='p-2 rounded h-full' onClick={toggleEdit}>Edit</button>
+                    <EditButton />
                 )}
             </div>
-        </div>
+        </div >
     )
 }
