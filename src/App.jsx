@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { add } from './features/todos/todosSlice'
-import { TodoPendingList, TodoCompletedList } from './features/todos/components/todo-list'
 import { TodoInput } from './features/todos/components/TodoInput'
 import './App.css'
+import { TodoMobileList } from './features/todos/components/todo-list/TodoMobileList'
+import { TodoList } from './features/todos/components/todo-list/TodoList'
 
 const App = () => {
   const [todoText, setTodoText] = useState("")
@@ -22,13 +23,13 @@ const App = () => {
     setTodoText('')
   }
 
+  const isMobile = window.screen.width < 768
 
   return (
     <main className='min-h-screen mt-8'>
       <TodoInput handleSubmit={handleSubmit} handleChange={handleChange} todoText={todoText} />
       <div className='w-full max-w-full flex gap-4'>
-        <TodoPendingList todos={todos} />
-        <TodoCompletedList todos={todos} />
+        {isMobile ? <TodoMobileList todos={todos} /> : <TodoList todos={todos} />}
       </div>
     </main>
   )
